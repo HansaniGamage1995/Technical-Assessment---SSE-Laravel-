@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@router/*": ["routes/*"]
+    },
+    "jsx": "react"
+  },
+  "include": ["src"]
+}
