@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../common/Layout';
 import userService from '../../services/user.service';
+import OrderForm from './OrderForm';
 
 const OrderPage = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   console.log('1111111111111', orders);
 
@@ -25,6 +27,14 @@ const OrderPage = () => {
     getOrders();
   }, []);
 
+  const handleOpenForm = () => {
+    setIsFormOpen(true);
+  };
+
+  const handleCloseOpen = () => {
+    setIsFormOpen(false);
+  };
+
   return (
     <Layout open={open} toggleSidebar={() => setOpen(!open)}>
       <section className="bg-white py-[70px] dark:bg-dark">
@@ -37,7 +47,7 @@ const OrderPage = () => {
 
           <div className="flex flex-row gap-2 items-center">
             <button
-              //   onClick={handleOpenForm}
+              onClick={handleOpenForm}
               className="bg-green-700 m-4 border rounded-full py-3 px-7 text-white"
             >
               Add Order
@@ -65,7 +75,6 @@ const OrderPage = () => {
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3">Id</th>
-                  <th className="px-6 py-3">User Id</th>
                   <th className="px-6 py-3">Order Total Price</th>
                   <th className="px-6 py-3">Status</th>
                   <th className="px-6 py-3">Product Name</th>
@@ -91,12 +100,6 @@ const OrderPage = () => {
                           rowSpan={order.order_items.length + 1}
                         >
                           {order.id}
-                        </td>
-                        <td
-                          className="px-6 py-4"
-                          rowSpan={order.order_items.length + 1}
-                        >
-                          {order.user_id}
                         </td>
                         <td
                           className="px-6 py-4"
@@ -147,13 +150,9 @@ const OrderPage = () => {
           </div> */}
         </div>
         {/* <ToastContainer /> */}
-        {/* {isFormOpen && (
-          <ProductForm
-            product={selectedProduct}
-            onClose={handleCloseForm}
-            onProductCreatedOrUpdated={handleProductCreatedOrUpdated}
-          />
-        )} */}
+        {isFormOpen && (
+          <OrderForm onClose={handleCloseOpen} orderDetails={orders} />
+        )}
       </section>
     </Layout>
   );
