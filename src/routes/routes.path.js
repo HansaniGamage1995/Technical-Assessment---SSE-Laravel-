@@ -2,6 +2,7 @@ import Product from '../components/products/Product';
 import Register from '../components/user/Register';
 import Login from '../components/user/Login';
 import Dashboard from '../components/home/Dashboard';
+import OrderPage from '../components/orders/Order';
 
 export const routes = [
   {
@@ -19,5 +20,9 @@ export const routes = [
   {
     path: '/dashboard',
     element: <Dashboard />,
+  },
+  {
+    path: '/orders',
+    element: <OrderPage />,
   },
 ];

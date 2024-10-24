@@ -5,6 +5,7 @@ import Login from './components/user/Login'; // Path to your Login component
 import Register from './components/user/Register'; // Create a Register component
 import Product from './components/products/Product';
 import Dashboard from './components/home/Dashboard';
+import OrderPage from './components/orders/Order';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
       <Route path="/login" element={<Login />} />{' '}
       <Route path="/product" element={<Product />} />{' '}
       <Route path="/dashboard" element={<Dashboard />} />{' '}
+      <Route path="/orders" element={<OrderPage />} />{' '}
       {/* Define your register route */}
     </Routes>
   );
