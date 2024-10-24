@@ -17,7 +17,7 @@
     "sourceType": "module",
     "requireConfigFile": false // Avoids the need for a separate Babel config
   },
-  "plugins": ["react", "prettier"],
+  "plugins": ["prettier", "@babel", "react", "flowtype"],
   "rules": {
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
