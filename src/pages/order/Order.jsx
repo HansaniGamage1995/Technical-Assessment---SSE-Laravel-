@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Layout from '../common/Layout';
+import Layout from '../../components/common/Layout';
 import userService from '../../services/user.service';
-import OrderForm from './OrderForm';
+import OrderForm from '../../components/orders/OrderForm';
 
 const OrderPage = () => {
   const [open, setOpen] = useState(false);

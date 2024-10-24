@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Layout from '../common/Layout';
-import ProductForm from './ProductForm';
+import Layout from '../../components/common/Layout';
+import ProductForm from '../../components/products/ProductForm';
 import productService from '../../services/product.service';
 import { ToastContainer, toast } from 'react-toastify';
 

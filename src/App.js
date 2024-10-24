@@ -1,11 +1,11 @@
 // src/App.js
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import Login from './components/user/Login'; // Path to your Login component
-import Register from './components/user/Register'; // Create a Register component
-import Product from './components/products/Product';
-import Dashboard from './components/home/Dashboard';
-import OrderPage from './components/orders/Order';
+import Product from './pages/product/Product';
+import Login from './pages/login/Login';
+import Register from './pages/register/Register';
+import Dashboard from './pages/home/Dashboard';
+import OrderPage from './pages/order/Order';
 
 const App = () => {
   return (
