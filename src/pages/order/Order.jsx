@@ -14,12 +14,12 @@ const OrderPage = () => {
   const [totalPage, setTotalPage] = useState(1);
   const token = cookies.get('token');
   const user = jwtDecode(token);
-  
+  const isAdmin = user.type == 'admin' ? true : false;
+
   const getOrders = async (page) => {
     setLoading(true);
     try {
-      const isAdmin = user.type == 'admin' ? true : false;
-      const {total, data} = await orderService.getOrders(isAdmin, token, page);      
+      const { total, data } = await orderService.getOrders(isAdmin, token, page);
       setTotalPage(Math.ceil(total / 10));
       setOrders(data);
     } catch (error) {
@@ -63,8 +63,25 @@ const OrderPage = () => {
       pages.push(i);
     }
     console.log(totalPage);
-    
+
     return pages;
+  };
+
+  const handleStatusChange = async (id, newStatus) => {
+    console.log('11111111', id, newStatus);
+    
+    try {
+      const response = await orderService.updateOrderStatus(id, newStatus);
+      console.log('2222222222', response);
+      
+      toast.success(response.data.message || 'Order status updated successfully!');
+      getOrders(currentPage); // Refresh orders to reflect the change.
+    } catch (error) {
+      const errors = error.response?.data?.errors || {};
+      Object.values(errors).forEach((errorArray) =>
+        errorArray.forEach((msg) => toast.error(msg))
+      );
+    }
   };
 
   return (
@@ -134,7 +151,16 @@ const OrderPage = () => {
                           className="px-6 py-4"
                           rowSpan={order.order_items.length + 1}
                         >
-                          {order.status}
+                          {isAdmin ? (
+                            <input
+                              type="text"
+                              defaultValue={order.status}
+                              onBlur={(e) => handleStatusChange(order.id, e.target.value)}
+                              className="border p-1"
+                            />
+                          ) : (
+                            order.status
+                          )}
                         </td>
                       </tr>
                       {order.order_items.map((item) => (
@@ -159,11 +185,10 @@ const OrderPage = () => {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`px-2 py-1 ${
-                    currentPage === page
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-200'
-                  }`}
+                  className={`px-2 py-1 ${currentPage === page
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-200'
+                    }`}
                 >
                   {page}
                 </button>
