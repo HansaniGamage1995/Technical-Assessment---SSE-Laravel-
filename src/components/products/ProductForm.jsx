@@ -41,11 +41,9 @@ const ProductForm = ({ product, onClose, onProductCreatedOrUpdated }) => {
 
     try {
       if (product) {
-        // Update product
         await productService.updateProduct(product.id, formData);
         toast.success('Product updated successfully!');
       } else {
-        // Add new product
         await productService.addProduct(formData);
         toast.success('Product added successfully!');
       }

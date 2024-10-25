@@ -3,12 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import authService from '../../services/auth.service';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import logo from '../../../src/images/logo.png';
+import { cookies } from "../../helpers/cookies.jsx";
+import InputBox from '../../components/common/ui/Input';
+
 const PATH_DASHBOARD = '/dashboard';
 const PATH_REGISTER = '/register';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const navigate = useNavigate(); // Hook to navigate programmatically
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,9 +23,9 @@ const Login = () => {
     e.preventDefault();
     try {
       const data = await authService.login(formData.email, formData.password);
-      localStorage.setItem('token', data.token); // Save token in localStorage
       toast.success('Login successful!');
-      navigate(PATH_DASHBOARD); // Redirect to dashboard or home
+      cookies.set("token", data.token);
+      navigate(PATH_DASHBOARD);
     } catch (error) {
       console.error('Login Error:', error);
       toast.error(error.error || 'Login failed. Please try again.');
@@ -37,7 +41,7 @@ const Login = () => {
               <div className="mb-10 text-center md:mb-16">
                 <a href="/#" className="mx-auto inline-block max-w-[160px]">
                   <img
-                    src="https://cdn.tailgrids.com/2.0/image/assets/images/logo/logo-primary.svg"
+                    src={logo}
                     alt="logo"
                   />
                 </a>
@@ -83,19 +87,5 @@ const Login = () => {
   );
 };
 
-const InputBox = ({ type, placeholder, name, value, onChange }) => {
-  return (
-    <div className="mb-6">
-      <input
-        type={type}
-        placeholder={placeholder}
-        name={name}
-        value={value}
-        onChange={onChange}
-        className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:text-black"
-      />
-    </div>
-  );
-};
 
 export default Login;

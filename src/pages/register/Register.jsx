@@ -3,6 +3,7 @@ import authService from '../../services/auth.service';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
+import InputBox from '../../components/common/ui/Input';
 const PATH_LOGIN = '/login';
 
 const Register = () => {
@@ -12,24 +13,32 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
+    type: 'customer',
   };
 
   const [formData, setFormData] = useState(initialFormData);
 
+  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  // Handle radio button change
+  const handleUserTypeChange = (e) => {
+    const userType = e.target.value;
+    setFormData({ ...formData, type: userType });
+  };
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const data = await authService.register(formData); // Call the service
-      console.log('Registration Successful:', data);
-      toast.success(data.msg); // Display success message
-      // Reset the form after successful submission
-      setFormData(initialFormData);
+      const data = await authService.register(formData);
+      console.log('Registration Successful:', formData);
+      toast.success(data.msg);
+      setFormData(initialFormData); // Reset the form
     } catch (error) {
       console.error('Registration Error:', error);
       toast.error('Registration failed. Please try again.');
@@ -87,6 +96,18 @@ const Register = () => {
                   onChange={handleChange}
                 />
                 <div className="mb-10">
+                <label className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    value="admin"
+                    checked={formData.type === 'admin'}
+                    onChange={handleUserTypeChange}
+                    className="form-radio text-blue-500"
+                  />
+                  <span className="ml-2">Is Admin</span>
+                </label>
+                </div>
+                <div className="mb-10">
                   <input
                     type="submit"
                     value="Register"
@@ -130,21 +151,6 @@ const Register = () => {
       </div>
       <ToastContainer />
     </section>
-  );
-};
-
-const InputBox = ({ type, placeholder, name, value, onChange }) => {
-  return (
-    <div className="mb-6">
-      <input
-        type={type}
-        placeholder={placeholder}
-        name={name}
-        value={value}
-        onChange={onChange}
-        className="w-full rounded-md border border-stroke bg-transparent px-5 py-3 text-base text-body-color outline-none focus:border-primary focus-visible:shadow-none dark:border-dark-3 dark:text-black"
-      />
-    </div>
   );
 };
 

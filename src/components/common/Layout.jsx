@@ -1,5 +1,5 @@
 import React from 'react';
-import Sidebar from './Sidebar';
+import Sidebar from '../../pages/sidebar/Sidebar';
 
 const Layout = ({ children, open, toggleSidebar }) => (
   <div className="flex">
@@ -23,7 +23,7 @@ const Layout = ({ children, open, toggleSidebar }) => (
         <h1 className="text-xl font-bold">Your App</h1>
       </header>
 
-      {/* Component-specific content goes here */}
+      {/* Component-specific content. */}
       <main className="p-6">{children}</main>
     </div>
   </div>

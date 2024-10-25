@@ -11,7 +11,7 @@ const addProduct = async (formData) => {
   }
 };
 
-const getProducts = async (page = 1, search, page_size = 10) => {
+const getProducts = async (page = 1, search = '', page_size = 10) => {
   try {
     const response = await axios.get(
       `/products?page=${page}&page_size=${page_size}&search=${search}`

@@ -1,27 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '../../components/common/Layout';
-import userService from '../../services/user.service';
+import orderService from '../../services/order.service';
 import OrderForm from '../../components/orders/OrderForm';
+import { cookies } from "../../helpers/cookies.jsx";
+import { jwtDecode } from "jwt-decode";
 
 const OrderPage = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
-
-  console.log('1111111111111', orders);
-
-  const getOrders = async () => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const token = cookies.get('token');
+  const user = jwtDecode(token);
+  
+  const getOrders = async (page) => {
     setLoading(true);
     try {
-      const res = await userService.getOrders();
-      setOrders(res);
+      const isAdmin = user.type == 'admin' ? true : false;
+      const {total, data} = await orderService.getOrders(isAdmin, token, page);      
+      setTotalPage(Math.ceil(total / 10));
+      setOrders(data);
     } catch (error) {
       console.error('Failed to fetch products:', error);
     } finally {
       setLoading(false);
     }
   };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => (prev -= 1));
+    }
+  };
+
+  const handleNextPage = () => {
+    if (totalPage > currentPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  useEffect(() => {
+    getOrders(currentPage);
+  }, [currentPage]);
 
   useEffect(() => {
     getOrders();
@@ -33,6 +55,16 @@ const OrderPage = () => {
 
   const handleCloseOpen = () => {
     setIsFormOpen(false);
+  };
+
+  const setPageNumbers = () => {
+    let pages = [];
+    for (let i = 1; i <= totalPage; i++) {
+      pages.push(i);
+    }
+    console.log(totalPage);
+    
+    return pages;
   };
 
   return (
@@ -52,29 +84,14 @@ const OrderPage = () => {
             >
               Add Order
             </button>
-
-            <form className="flex">
-              <input
-                type="text"
-                placeholder="Search"
-                // value={searchQuery}
-                // onChange={handleSearchChange}
-                className="border px-4 py-2 rounded-l"
-              />
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded-r"
-              >
-                Search
-              </button>
-            </form>
           </div>
 
           <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
             <table className="w-4/5 m-4 text-sm text-center text-gray-500 dark:text-gray-400">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3">Id</th>
+                  <th className="px-6 py-3">User</th>
+                  <th className="px-6 py-3">Email</th>
                   <th className="px-6 py-3">Order Total Price</th>
                   <th className="px-6 py-3">Status</th>
                   <th className="px-6 py-3">Product Name</th>
@@ -89,7 +106,7 @@ const OrderPage = () => {
                   </tr>
                 ) : orders.length === 0 ? (
                   <tr>
-                    <td colSpan="5">No products found</td>
+                    <td colSpan="5">No Orders found</td>
                   </tr>
                 ) : (
                   orders.map((order) => (
@@ -99,7 +116,13 @@ const OrderPage = () => {
                           className="px-6 py-4"
                           rowSpan={order.order_items.length + 1}
                         >
-                          {order.id}
+                          {order.user.name}
+                        </td>
+                        <td
+                          className="px-6 py-4"
+                          rowSpan={order.order_items.length + 1}
+                        >
+                          {order.user.email}
                         </td>
                         <td
                           className="px-6 py-4"
@@ -129,7 +152,7 @@ const OrderPage = () => {
               </tbody>
             </table>
           </div>
-          {/* <div className="flex justify-between">
+          <div className="flex justify-between">
             <button onClick={handlePrevPage}>Prev</button>
             <div className="flex space-x-2">
               {setPageNumbers().map((page) => (
@@ -147,7 +170,7 @@ const OrderPage = () => {
               ))}
             </div>
             <button onClick={handleNextPage}>Next</button>
-          </div> */}
+          </div>
         </div>
         {/* <ToastContainer /> */}
         {isFormOpen && (

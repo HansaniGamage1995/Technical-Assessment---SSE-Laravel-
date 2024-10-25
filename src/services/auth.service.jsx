@@ -1,7 +1,5 @@
-// src/services/auth.service.js
 import axios from 'axios';
 
-// Configure axios
 axios.defaults.baseURL = 'http://127.0.0.1:8000/api';
 axios.defaults.withCredentials = true;
 
@@ -12,9 +10,8 @@ const register = async (formData) => {
         'Content-Type': 'application/json',
       },
     });
-    return response.data; // Return the response data if successful
+    return response.data;
   } catch (error) {
-    // Throw the error to be handled by the caller
     throw error.response?.data || error.message;
   }
 };
@@ -22,7 +19,7 @@ const register = async (formData) => {
 const login = async (email, password) => {
   try {
     const response = await axios.post('/login', { email, password });
-    return response.data; // Contains the JWT token and user data
+    return response.data;
   } catch (error) {
     throw error.response?.data || error.message;
   }

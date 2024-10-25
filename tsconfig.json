@@ -4,7 +4,7 @@
     "paths": {
       "@router/*": ["routes/*"]
     },
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
   "include": ["src"]
 }
